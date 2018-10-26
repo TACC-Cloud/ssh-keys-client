@@ -1,7 +1,8 @@
-package main
+package services
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -9,29 +10,27 @@ import (
 )
 
 // GetUserPubKeys makes a request for plain-text public keys for a given user.
-func (c *Configurations) GetUserPubKeys(user string) error {
+func GetUserPubKeys(baseURL, accessToken, user string) error {
 	// Keys endpoint.
-	keysEndpoint := c.BaseUrl + "/keys/v2/" + user
+	keysEndpoint := baseURL + "/keys/v2/" + user
 
 	// Make request.
 	req, err := http.NewRequest("GET", keysEndpoint, nil)
 	if err != nil {
-		fmt.Printf("Error building request: %s\n", err)
 		return err
 	}
 
 	// Set request headers.
-	req.Header.Set("Authorization", "Bearer "+c.AccessToken)
+	req.Header.Set("Authorization", "Bearer "+accessToken)
 
 	// Create HTTP client with timeout of 10s.
 	client := &http.Client{
-		Timeout: time.Second * 10,
+		Timeout: time.Second * 5,
 	}
 
 	// Make HTTP request.
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Printf("Error making request: %s\n", err)
 		return err
 	}
 	defer resp.Body.Close()
@@ -39,11 +38,11 @@ func (c *Configurations) GetUserPubKeys(user string) error {
 	// Check if request was successful.
 	if resp.StatusCode == http.StatusOK {
 		var publicKeys []PublicKey
-		// Pass public keys to stdout.
 		if err := json.NewDecoder(resp.Body).Decode(&publicKeys); err != nil {
 			return err
 		}
 
+		// Write keys to stdout.
 		for _, pubkey := range publicKeys {
 			fmt.Println(pubkey)
 		}
@@ -54,7 +53,7 @@ func (c *Configurations) GetUserPubKeys(user string) error {
 			return err
 		}
 
-		fmt.Println(string(body))
+		return errors.New(string(body))
 	}
 
 	return nil

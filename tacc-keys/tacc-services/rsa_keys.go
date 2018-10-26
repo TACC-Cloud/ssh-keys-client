@@ -1,12 +1,13 @@
-package main
+package services
 
 import (
 	"crypto/rand"
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
-	"golang.org/x/crypto/ssh"
 	"io/ioutil"
+
+	"golang.org/x/crypto/ssh"
 )
 
 // generatePrivateKey creates a RSA Private Key of specified byte size
