@@ -29,9 +29,12 @@ var rootCmd = &cobra.Command{
 	Use:   "tacc-keys",
 	Short: "Client for TACC's public ssh keys service",
 	Long: `Client for TACC's public ssh keys service.
-    
-    It allows you to create, list, publish, and delete public ssh keys from the
-    keys service`,
+It allows you to create, list, publish, and delete public ssh keys from the
+keys service.
+
+To use this tool, you'll need a configuration file, ".tacc-keys.(yaml|json|toml)".
+You can use the "curent.json" file created by TACC-Cloud/agave-cli.
+`,
 }
 
 // Execute root command.

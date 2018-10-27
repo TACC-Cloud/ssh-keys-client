@@ -1,25 +1,12 @@
-## tacc-keys
+# Oficial client for TACC's keys service
 
-Client for TACC's public ssh keys service
+Hello, if you have found yourself here then you are probably in need of a
+client for TACC's public ssh keys service.
 
-### Synopsis
+If this is so, then you have found the perfect tool!
+This client will allow you to interact with the keys service by listing keys,
+creating public and private key pairs, posting public keys, deleting them,
+and managing the oauth client you need to interact with TACC.
 
-Client for TACC's public ssh keys service.
-    
-    It allows you to create, list, publish, and delete public ssh keys from the
-    keys service
-
-### Options
-
-```
-      --config string   config file (default is $HOME/.tacc-keys.yaml)
-  -h, --help            help for tacc-keys
-```
-
-### SEE ALSO
-
-* [tacc-keys completion](tacc-keys_completion.md)	 - Generate bash completion scripts and documentation
-* [tacc-keys delete](tacc-keys_delete.md)	 - Delete a public ssh key from TACC's keys service
-* [tacc-keys docs](tacc-keys_docs.md)	 - Generate markdown documentation
-* [tacc-keys list](tacc-keys_list.md)	 - List all public ssh keys registered to a user
-* [tacc-keys post](tacc-keys_post.md)	 - Post a public ssh key to TACC's keys service
+To see how you can get started, 
+[read the short documentation for tacc-keys](./docs/tacc-keys.md).

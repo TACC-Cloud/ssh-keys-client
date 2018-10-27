@@ -17,6 +17,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/TACC-Cloud/ssh-keys-client/tacc-keys/tacc-services"
@@ -36,13 +37,14 @@ func refreshTokenPair() error {
 	now := time.Now().Unix() - 100
 	if (createdAt + expiresIn) < now {
 		fmt.Fprintln(os.Stderr, "Refreshing token...")
-		newTokens, err := services.RefreshToken(baseURL, refreshToken, apiKey, apiSecret)
+		access, refresh, err := services.RefreshToken(
+			baseURL, refreshToken, apiKey, apiSecret)
 		if err != nil {
 			return err
 		}
-		viper.Set("access_token", newTokens.AccessToken)
-		viper.Set("refresh_token", newTokens.RefreshToken)
-		viper.Set("created_at", newTokens.CreatedAt)
+		viper.Set("access_token", access)
+		viper.Set("refresh_token", refresh)
+		viper.Set("created_at", strconv.FormatInt(time.Now().Unix(), 10))
 		viper.WriteConfig()
 	}
 

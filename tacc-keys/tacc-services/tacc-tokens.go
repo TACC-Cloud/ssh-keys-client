@@ -24,7 +24,7 @@ type TokenResponse struct {
 
 // RefreshToken makes an API call via HTTP to obtain a a new access and refresh
 // token pair.
-func RefreshToken(baseURL, refreshToken, apiKey, apiSecret string) (*TokenResponse, error) {
+func RefreshToken(baseURL, refreshToken, apiKey, apiSecret string) (string, string, error) {
 	// Token refresh endpoint.
 	tokenEndpoint := baseURL + "/token"
 
@@ -37,14 +37,14 @@ func RefreshToken(baseURL, refreshToken, apiKey, apiSecret string) (*TokenRespon
 	// Make request.
 	req, err := http.NewRequest("POST", tokenEndpoint, strings.NewReader(data))
 	if err != nil {
-		return nil, err
+		return "", "", err
 	}
 	// Set request headers.
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	// Basic HTTTP authentication.
 	req.SetBasicAuth(apiKey, apiSecret)
 
-	// Create HTTP client with timeout of 10s.
+	// Create HTTP client with timeout of 5s.
 	client := &http.Client{
 		Timeout: time.Second * 5,
 	}
@@ -52,7 +52,7 @@ func RefreshToken(baseURL, refreshToken, apiKey, apiSecret string) (*TokenRespon
 	// Make HTTP request.
 	resp, err := client.Do(req)
 	if err != nil {
-		return nil, err
+		return "", "", err
 	}
 	defer resp.Body.Close()
 
@@ -60,7 +60,7 @@ func RefreshToken(baseURL, refreshToken, apiKey, apiSecret string) (*TokenRespon
 	var refreshedToken TokenResponse
 	if resp.StatusCode == http.StatusOK {
 		if err := json.NewDecoder(resp.Body).Decode(&refreshedToken); err != nil {
-			return nil, err
+			return "", "", err
 		}
 
 		// Add creation time.
@@ -69,10 +69,64 @@ func RefreshToken(baseURL, refreshToken, apiKey, apiSecret string) (*TokenRespon
 	} else { // API call returned an error.
 		body, err := ioutil.ReadAll(resp.Body)
 		if err != nil {
-			return nil, err
+			return "", "", err
 		}
-		return nil, errors.New(string(body))
+		return "", "", errors.New(string(body))
 	}
 
-	return &refreshedToken, nil
+	return refreshedToken.AccessToken, refreshedToken.RefreshToken, nil
+}
+
+// GetTokens obtains an access and a refresh token pair.
+func GetTokens(baseURL, apiKey, apiSecret, username, password string) (string, string, error) {
+	// Token refresh endpoint.
+	tokenEndpoint := baseURL + "/token"
+
+	// Request data.
+	v := url.Values{}
+	v.Set("grant_type", "password")
+	v.Set("scope", "PRODUCTION")
+	v.Set("username", username)
+	v.Set("password", password)
+	data := v.Encode()
+	// Make request.
+	req, err := http.NewRequest("POST", tokenEndpoint, strings.NewReader(data))
+	if err != nil {
+		return "", "", err
+	}
+	// Set request headers.
+	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	// Basic HTTTP authentication.
+	req.SetBasicAuth(apiKey, apiSecret)
+
+	// Create HTTP client with timeout of 5s.
+	client := &http.Client{
+		Timeout: time.Second * 5,
+	}
+
+	// Make HTTP request.
+	resp, err := client.Do(req)
+	if err != nil {
+		return "", "", err
+	}
+	defer resp.Body.Close()
+
+	// Parse in response.
+	var tokens TokenResponse
+	if resp.StatusCode == http.StatusOK {
+		if err := json.NewDecoder(resp.Body).Decode(&tokens); err != nil {
+			return "", "", err
+		}
+
+		// Add creation time.
+		tokens.CreatedAt = strconv.FormatInt(time.Now().Unix(), 10)
+
+	} else { // API call returned an error.
+		body, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return "", "", err
+		}
+		return "", "", errors.New(string(body))
+	}
+	return tokens.AccessToken, tokens.RefreshToken, nil
 }
