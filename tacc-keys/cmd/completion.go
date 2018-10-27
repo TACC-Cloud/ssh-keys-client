@@ -15,26 +15,30 @@
 package cmd
 
 import (
-	"fmt"
 	"os"
 
 	"github.com/spf13/cobra"
-	"github.com/spf13/cobra/doc"
 )
 
-// docsCmd represents the docs command
-var docsCmd = &cobra.Command{
-	Use:   "docs",
-	Short: "Generate markdown documentation",
-	Long:  `Generate markdown documentation in your current directory.`,
+// completionCmd represents the completion command
+var completionCmd = &cobra.Command{
+	Use:   "completion",
+	Short: "Generate bash completion scripts and documentation",
+	Long: `completion will generate bash completion scripts and write them to 
+standard out. To load completion run
+    
+    . <(tacc-keys completion)
+
+To configure your bash shell to load completions for each session add to your bashrc
+
+    # ~/.bashrc or ~/.profile
+    . <(tacc-keys completion)
+    `,
 	Run: func(cmd *cobra.Command, args []string) {
-		if err := doc.GenMarkdownTree(rootCmd, "./"); err != nil {
-			fmt.Println(err)
-			os.Exit(1)
-		}
+		rootCmd.GenBashCompletion(os.Stdout)
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(docsCmd)
+	rootCmd.AddCommand(completionCmd)
 }

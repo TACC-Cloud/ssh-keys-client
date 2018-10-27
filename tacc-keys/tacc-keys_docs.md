@@ -1,21 +1,10 @@
 ## tacc-keys docs
 
-Generate bash completion scripts and documentation
+Generate markdown documentation
 
 ### Synopsis
 
-docs will generate bash completion scripts, write them to standard out
-and generate markdown documentation to /tmp/tacc-keys.
-
-To load completion run
-    
-    . <(tacc-keys completion)
-
-To configure your bash shell to load completions for each session add to your bashrc
-
-    # ~/.bashrc or ~/.profile
-    . <(tacc-keys completion)
-    
+Generate markdown documentation in your current directory.
 
 ```
 tacc-keys docs [flags]
