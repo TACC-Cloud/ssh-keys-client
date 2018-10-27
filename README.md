@@ -14,3 +14,9 @@ list keys, etc.
 functionality and the authorized keys command by setting up an ssh server in a
 container and trying to access it via a saved public ssh key and by using the
 keys server.
+
+## Notes
+In case you want to cross compile any of the clients:
+```
+GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -a -installsuffix cgo
+```
