@@ -1,4 +1,4 @@
-package main
+package services
 
 import (
 	"fmt"
@@ -16,7 +16,7 @@ type PublicKey struct {
 // ResultsResponse contains the fields of the "result" field from the key
 // service's response.
 type ResultsResponse struct {
-	Id        int64         `json:"id"`
+	ID        int64         `json:"id"`
 	PubKey    string        `json:"key_value"`
 	Username  string        `json:"username"`
 	Tenant    string        `json:"tenant"`
@@ -31,5 +31,5 @@ type ResultsTags struct {
 
 // String representation of a PublicKey.
 func (p PublicKey) String() string {
-	return fmt.Sprintf("%d %s\n%s", p.Result.Id, p.Result.Tags[0].Name, p.Result.PubKey)
+	return fmt.Sprintf("%d %s\n%s", p.Result.ID, p.Result.Tags[0].Name, p.Result.PubKey)
 }

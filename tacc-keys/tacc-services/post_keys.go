@@ -1,33 +1,33 @@
-package main
+package services
 
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"time"
 )
 
-// Request payload
-type Payload struct {
+type payload struct {
 	KeyValue string        `json:"key_value"`
-	Tags     []PayloadTags `json:"tags"`
+	Tags     []payloadTags `json:"tags"`
 }
 
-type PayloadTags struct {
+type payloadTags struct {
 	Purpose string `json:"name"`
 }
 
 // PostUserPubKey posts a user's public key to the keys server.
-func (c *Configurations) PostUserPubKey(user string, pubkey string) error {
+func PostUserPubKey(baseURL, accessToken, user, pubkey string) error {
 	// Keys endpoint.
-	keysEndpoint := c.BaseUrl + "/keys/v2/" + user
+	keysEndpoint := baseURL + "/keys/v2/" + user
 
 	// Request payload.
-	data := Payload{
+	data := payload{
 		KeyValue: pubkey,
-		Tags:     []PayloadTags{{Purpose: "go-keys-client"}},
+		Tags:     []payloadTags{{Purpose: "go-keys-client"}},
 	}
 	payloadBytes, err := json.Marshal(data)
 	if err != nil {
@@ -37,23 +37,21 @@ func (c *Configurations) PostUserPubKey(user string, pubkey string) error {
 	// Make request.
 	req, err := http.NewRequest("POST", keysEndpoint, bytes.NewReader(payloadBytes))
 	if err != nil {
-		fmt.Printf("Error building request: %s\n", err)
 		return err
 	}
 
 	// Set request headers.
-	req.Header.Set("Authorization", "Bearer "+c.AccessToken)
+	req.Header.Set("Authorization", "Bearer "+accessToken)
 	req.Header.Set("Content-Type", "application/json")
 
 	// Create HTTP client with timeout of 10s.
 	client := &http.Client{
-		Timeout: time.Second * 10,
+		Timeout: time.Second * 5,
 	}
 
 	// Make HTTP request.
 	resp, err := client.Do(req)
 	if err != nil {
-		fmt.Printf("Error making request: %s\n", err)
 		return err
 	}
 	defer resp.Body.Close()
@@ -72,7 +70,7 @@ func (c *Configurations) PostUserPubKey(user string, pubkey string) error {
 			return err
 		}
 
-		fmt.Println(string(body))
+		return errors.New(string(body))
 	}
 
 	return nil

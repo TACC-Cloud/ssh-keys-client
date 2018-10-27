@@ -1,0 +1,31 @@
+## tacc-keys list
+
+List all public ssh keys registered to a user
+
+### Synopsis
+
+List all public ssh keys registered to a user. The keys will be printed
+using the following format:
+    
+    key-id:int tag:string
+    ssh-pubkey:string
+
+```
+tacc-keys list [username] [flags]
+```
+
+### Options
+
+```
+  -h, --help   help for list
+```
+
+### Options inherited from parent commands
+
+```
+      --config string   config file (default is $HOME/.tacc-keys.yaml)
+```
+
+### SEE ALSO
+
+* [tacc-keys](README.md)	 - Client for TACC's public ssh keys service

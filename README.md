@@ -5,9 +5,10 @@ This repo contains:
 client for the keys service that will list all public keys for a given user in
 a format that is accepted for sshd (see `AuthorizedKeysCommand` in `sshd_config(5)`).
 
-* [keys client](./keys-client) A full client for the keys service. Once you
-have a registered oauth agave client, you can use this client to create public
-and private ssh keys for you, post the public key, delete keys, list keys, etc.
+* [oficial TACC keys client](./tacc-keys) A full client for the keys service. 
+Once you have a registered oauth agave client, you can use this client to 
+create public and private ssh keys for you, post the public key, delete keys, 
+list keys, etc.
 
 * [test run](./test-run) Provides a way to locally test the keys server
 functionality and the authorized keys command by setting up an ssh server in a
