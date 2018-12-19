@@ -27,6 +27,7 @@ import (
 var (
 	createKeys bool
 	keyName    string
+	tag        string
 )
 
 // postCmd represents the post command
@@ -70,7 +71,7 @@ the service.`,
 		publicKey := string(pubKey)
 
 		// Post public key to service.
-		err = services.PostUserPubKey(baseURL, accessToken, username, publicKey)
+		err = services.PostUserPubKey(baseURL, accessToken, username, publicKey, tag)
 		if err != nil {
 			fmt.Printf("Error posting key: %s\n", err)
 			os.Exit(1)
@@ -86,4 +87,6 @@ func init() {
 		&createKeys, "create", "c", false, "Create a pair of public and private ssh keys")
 	postCmd.Flags().StringVarP(
 		&keyName, "key-name", "k", "id_rsa", "Name of key (no extension)")
+	postCmd.Flags().StringVarP(
+		&tag, "tag", "t", "go-keys-client", "Include custom name tag with the key")
 }

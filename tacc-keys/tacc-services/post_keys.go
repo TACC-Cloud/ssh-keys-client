@@ -20,14 +20,14 @@ type payloadTags struct {
 }
 
 // PostUserPubKey posts a user's public key to the keys server.
-func PostUserPubKey(baseURL, accessToken, user, pubkey string) error {
+func PostUserPubKey(baseURL, accessToken, user, pubkey string, tag string) error {
 	// Keys endpoint.
 	keysEndpoint := baseURL + "/keys/v2/" + user
 
 	// Request payload.
 	data := payload{
 		KeyValue: pubkey,
-		Tags:     []payloadTags{{Purpose: "go-keys-client"}},
+		Tags:     []payloadTags{{Purpose: tag}},
 	}
 	payloadBytes, err := json.Marshal(data)
 	if err != nil {
