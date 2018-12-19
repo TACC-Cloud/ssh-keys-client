@@ -12,7 +12,7 @@ To install this client you can go and download the appropiate binary from the
 [releases page](https://github.com/TACC-Cloud/ssh-keys-client/releases) or if
 you already have [Go](https://golang.org/) installed in your system then do:
 ```
-$ go get -u https://github.com/TACC-Cloud/ssh-keys-client/tacc-keys
+$ go get -u github.com/TACC-Cloud/ssh-keys-client/tacc-keys
 ```
 
 To see how you can get started, 
