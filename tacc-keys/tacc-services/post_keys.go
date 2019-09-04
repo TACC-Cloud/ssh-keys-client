@@ -12,11 +12,12 @@ import (
 
 type payload struct {
 	KeyValue string        `json:"key_value"`
-	Tags     []payloadTags `json:"tags"`
+	Tags     []payloadTag `json:"tags"`
 }
 
-type payloadTags struct {
-	Purpose string `json:"name"`
+type payloadTag struct {
+	Name string `json:"name"`
+	Value string `json:"value"`
 }
 
 // PostUserPubKey posts a user's public key to the keys server.
@@ -27,7 +28,7 @@ func PostUserPubKey(baseURL, accessToken, user, pubkey string, tag string) error
 	// Request payload.
 	data := payload{
 		KeyValue: pubkey,
-		Tags:     []payloadTags{{Purpose: tag}},
+		Tags:     []payloadTag{{Name:"go-keys-client", Value: tag}},
 	}
 	payloadBytes, err := json.Marshal(data)
 	if err != nil {
